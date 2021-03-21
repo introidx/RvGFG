@@ -7,9 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.geeksforgeeks.rvadapterviewbinding.databinding.SingleItemBinding
 
 class RvAdapter(
-    private var languageList: List<Language>
-
+    private var languageList: List<Language>,
+    private var optionsMenuClickListener: OptionsMenuClickListener
 ) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+
+    interface OptionsMenuClickListener {
+        fun onOptionsMenuClicked(position: Int)
+    }
 
     // create an inner class with name ViewHolder
     //It takes a view argument, in which pass the generated class of single_item.xml
@@ -32,12 +36,12 @@ class RvAdapter(
         with(holder){
             with(languageList[position]){
                 binding.tvLangName.text = this.name
-                binding.tvDescription.text = this.description
-                binding.expandedView.visibility = if (this.expand) View.VISIBLE else View.GONE
-                binding.cardLayout.setOnClickListener {
-                    this.expand = !this.expand
-                    notifyDataSetChanged()
+                binding.tvExp.text = this.exp
+
+                binding.textViewOptions.setOnClickListener {
+                    optionsMenuClickListener.onOptionsMenuClicked(position)
                 }
+
             }
         }
     }

@@ -2,6 +2,9 @@ package com.geeksforgeeks.rvadapterviewbinding
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.PopupMenu
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.geeksforgeeks.rvadapterviewbinding.databinding.ActivityMainBinding
 
@@ -23,36 +26,17 @@ class MainActivity : AppCompatActivity() {
         // define layout manager for the Recycler view
         binding.rvList.layoutManager = LinearLayoutManager(this)
         // attach adapter to the recycler view
-        rvAdapter = RvAdapter(languageList)
+        rvAdapter = RvAdapter(languageList , object : RvAdapter.OptionsMenuClickListener{
+            override fun onOptionsMenuClicked(position: Int) {
+                performOptionsMenuClick(position)
+            }
+        })
         binding.rvList.adapter = rvAdapter
 
-        // create new objects
-        val language1 = Language(
-            "Java",
-            "Java is an Object Oriented Programming language." +
-                    " Java is used in all kind of applications like Mobile Applications (Android is Java based), " +
-                    "desktop applications, web applications, client server applications, enterprise applications and many more. ",
-            false
-        )
-        val language2 = Language(
-            "Kotlin",
-            "Kotlin is a statically typed, general-purpose programming language" +
-                    " developed by JetBrains, that has built world-class IDEs like IntelliJ IDEA, PhpStorm, Appcode, etc.",
-            false
-        )
-        val language3 = Language(
-            "Python",
-            "Python is a high-level, general-purpose and a very popular programming language." +
-                    " Python programming language (latest Python 3) is being used in web development, Machine Learning applications, " +
-                    "along with all cutting edge technology in Software Industry.",
-            false
-        )
-        val language4 = Language(
-            "CPP",
-            "C++ is a general purpose programming language and widely used now a days for " +
-                    "competitive programming. It has imperative, object-oriented and generic programming features. ",
-            false
-        )
+        val language1 = Language("Java" , "1" )
+        val language2 = Language("Java" , "1" )
+        val language3 = Language("Java" , "1" )
+        val language4 = Language("Java" , "1" )
 
         languageList.add(language1)
         languageList.add(language2)
@@ -61,6 +45,26 @@ class MainActivity : AppCompatActivity() {
 
         rvAdapter.notifyDataSetChanged()
 
+    }
+
+    private fun performOptionsMenuClick(position: Int) {
+        val popupMenu = PopupMenu(this , binding.rvList[position].findViewById(R.id.textViewOptions))
+        popupMenu.inflate(R.menu.options_menu)
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener{
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when(item?.itemId){
+                    R.id.delete -> {
+                        val tempLang = languageList[position]
+                        languageList.remove(tempLang)
+                        rvAdapter.notifyDataSetChanged()
+                        return true
+                    }
+                }
+                return false
+            }
+
+        })
+        popupMenu.show()
     }
 
     // on destroy of view make the binding reference to null
