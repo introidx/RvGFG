@@ -1,14 +1,16 @@
 package com.geeksforgeeks.rvadapterviewbinding
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.geeksforgeeks.rvadapterviewbinding.databinding.SingleItemBinding
 
-class RvAdapter() : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+class RvAdapter(
+    private var languageList: List<Language>
 
-    private var oldLanguageList= emptyList<Language>()
+) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+
     // create an inner class with name ViewHolder
     //It takes a view argument, in which pass the generated class of single_item.xml
     // ie SingleItemBinding and in the RecyclerView.ViewHolder(binding.root) pass it like this
@@ -28,25 +30,22 @@ class RvAdapter() : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
     // to keep it simple we are not setting any image data to view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
-            with(oldLanguageList[position]){
+            with(languageList[position]){
                 binding.tvLangName.text = this.name
-                binding.tvExp.text = this.exp
+                binding.tvDescription.text = this.description
+                binding.expandedView.visibility = if (this.expand) View.VISIBLE else View.GONE
+                binding.cardLayout.setOnClickListener {
+                    this.expand = !this.expand
+                    notifyDataSetChanged()
+                }
             }
         }
     }
 
     // return the size of languageList
     override fun getItemCount(): Int {
-        return oldLanguageList.size
+        return languageList.size
     }
 
-    //
-    fun setData(newLanguageList : List<Language>){
-        val diffUtil = MyDiffUtil(oldLanguageList , newLanguageList)
-        // it calculates the different items of the oldLanguageList and newLanguageList
-        val diffResult = DiffUtil.calculateDiff(diffUtil)
-        // assign oldLanguageList to newLanguageList
-        oldLanguageList = newLanguageList
-        diffResult.dispatchUpdatesTo(this)
-    }
+
 }
