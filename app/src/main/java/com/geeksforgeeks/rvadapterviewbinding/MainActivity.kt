@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvList.adapter = rvAdapter
 
         // create new objects
+        // add some row data
         val language1 = Language(
             "Java",
             "Java is an Object Oriented Programming language." +
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             false
         )
 
+        // add items to list
         languageList.add(language1)
         languageList.add(language2)
         languageList.add(language3)

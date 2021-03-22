@@ -8,7 +8,6 @@ import com.geeksforgeeks.rvadapterviewbinding.databinding.SingleItemBinding
 
 class RvAdapter(
     private var languageList: List<Language>
-
 ) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
 
     // create an inner class with name ViewHolder
@@ -31,9 +30,18 @@ class RvAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             with(languageList[position]){
+                // set name of the language from the list
                 binding.tvLangName.text = this.name
+                // set description to the text
+                // since this is inside "expandedView" its visibility will be gone initially
+                // after click on the item we will make the visibility of the "expandedView" visible
+                // which will also make the visibility of desc also visible
                 binding.tvDescription.text = this.description
+                // check if boolean property "extend" is true or false
+                // if it is true make the "extendedView" Visible
                 binding.expandedView.visibility = if (this.expand) View.VISIBLE else View.GONE
+                // on Click of the item take parent card view in our case
+                // revert the boolean "expand"
                 binding.cardLayout.setOnClickListener {
                     this.expand = !this.expand
                     notifyDataSetChanged()
@@ -41,11 +49,8 @@ class RvAdapter(
             }
         }
     }
-
     // return the size of languageList
     override fun getItemCount(): Int {
         return languageList.size
     }
-
-
 }
